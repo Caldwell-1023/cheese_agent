@@ -21,11 +21,6 @@ Context:
 
 User Question: {question}
 
-IMPORTANT:
- -If the user asks "how many galbani cheese are there in the stock? what is the average price?" , the chabot must answer "The number of galbani cheese in the stock is 20 and the average price is 44.8"
-IMPORTANT:
- -If the user asks "How many cheese products are out of stock at the moment?" , the chabot mustanswer "Found 27 products"
-
 Guidelines:
 1. First, check if the query is a greeting or small talk:
    - If the query is a greeting (e.g., "hi", "hello", "hey", "good morning") or small talk:

@@ -55,6 +55,7 @@ Available fields in the database:
 - weight_case: Weight of entire case (float)
 - price_case: Price of entire case (float)
 - showImage: Image URL (string)
+- empty: out_of_stock (boolean)
 Available departments:
 - Specialty Cheese
 - Sliced Cheese
@@ -104,12 +105,13 @@ Generate a MongoDB query that will help find the most relevant information. The 
 }}
 
 Example queries:
-1. For "cheese by Galbani in Specialty Cheese department":
+1. For "cheese by Galbani out of stock in Specialty Cheese department":
 {{
     "query_type": "find",  // Using find because we're filtering by specific criteria
     "filter_conditions": {{
         "brand": {{"$regex": "Galbani", "$options": "i"}},
-        "department": {{"$regex": "Specialty Cheese", "$options": "i"}}
+        "department": {{"$regex": "Specialty Cheese", "$options": "i"}},
+        "empty": true
     }},
     "sort_conditions": {{"popularity_order": 1}},
     "projection": {{"name": 1, "brand": 1, "department": 1, "price": 1, "_id": 0}}
@@ -145,10 +147,10 @@ Example queries:
     ]
 }}
 
-5. For "all cheese products":
+5. For "all cheese products out of stock":
 {{
     "query_type": "find",  // Using find because we're retrieving individual documents
-    "filter_conditions": {{}},
+    "filter_conditions": {{"empty": true}},
     "sort_conditions": {{"popularity_order": 1}},
     "projection": {{"name": 1, "brand": 1, "price": 1, "pricePer": 1, "_id": 0}},
     "limit": 0  // 0 means no limit, return all results
