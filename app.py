@@ -1,5 +1,5 @@
 import streamlit as st
-from agent import make_agent_workflow
+from scripts.agent import make_agent_workflow
 from langgraph.types import Command
 import json
 import os

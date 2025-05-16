@@ -28,8 +28,8 @@ from scripts.nodes.reasoningNode import reasoningNode
 from scripts.nodes.MongoDBretrievalNode import MongoDBretrievalNode
 from scripts.nodes.pineconeretrievalNode import pineconeretrievalNode
 from scripts.nodes.answerNode import answerNode
-from scripts.retrieve_or_answer import retrieve_or_answer
-from scripts.retry_or_end import retry_or_end
+from scripts.conditional_edges.retrieve_or_answer import retrieve_or_answer
+from scripts.conditional_edges.retry_or_end import retry_or_end
 from scripts.nodes.combinedSearchNode import combinedSearchNode
 
 def make_agent_workflow():
