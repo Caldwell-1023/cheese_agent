@@ -2,9 +2,6 @@ import streamlit as st
 from agent import make_agent_workflow
 from langgraph.types import Command
 import json
-from IPython.display import Image, display
-import networkx as nx
-import matplotlib.pyplot as plot
 
 image_path = "img/workflow_graph.png"
 # Set page config
