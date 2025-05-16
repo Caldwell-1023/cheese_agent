@@ -127,10 +127,10 @@ Example queries:
     ]
 }}
 
-3. For "how many cheeses are there?":
+3. For "how many cheeses are in the stock?":
 {{
     "query_type": "aggregate",  // Using aggregate because we're counting
-    "filter_conditions": {{}},
+    "filter_conditions": {{"empty": false}},
     "aggregation_pipeline": [
         {{"$count": "total_cheeses"}}
     ]
@@ -165,12 +165,13 @@ Example queries:
     "projection": {{"name": 1, "price": 1, "brand": 1, "pricePer": 1, "_id": 0}}
 }}
 
-7. For "all mozzarella cheeses under $50":
+7. For "all mozzarella cheeses under $50 in the stock":
 {{
     "query_type": "find",  // Using find because we're filtering and retrieving documents
     "filter_conditions": {{
         "name": {{"$regex": "mozzarella", "$options": "i"}},
-        "price": {{"$lte": 50}}
+        "price": {{"$lte": 50}},
+        "empty": false
     }},
     "sort_conditions": {{"price": -1}},
     "projection": {{"name": 1, "price": 1, "brand": 1, "pricePer": 1, "_id": 0}},

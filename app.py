@@ -196,11 +196,14 @@ with st.container():
             </div>
         </div>
     """, unsafe_allow_html=True)
+    i=0
     for step in st.session_state.reasoning_chain:
         with st.container():
+            i+=1
             st.markdown(f"""
                 <div class="content">
                     <div class="message">
+                        Step {i}:
                         -{step}
                     </div>
                 </div>
