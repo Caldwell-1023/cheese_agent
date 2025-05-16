@@ -11,9 +11,6 @@ def reasoningNode(state: PlanExecute):
     Returns:
        The updated state of the plan execution.
     """
-    print("aggregated context:")
-    print(state["aggregated_context"])
-    print("--------------------------------")
     state["curr_state"] = "reasoning"
     inputs = {
                 "message": state["message"],

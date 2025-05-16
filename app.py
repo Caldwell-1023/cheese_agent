@@ -157,10 +157,10 @@ if "feedback_key" not in st.session_state:
     st.session_state.feedback_key = 0
 if "reasoning_chain" not in st.session_state:
     st.session_state.reasoning_chain = []
+if "thread_id" not in st.session_state:
+    st.session_state.thread_id = 0
 
 dotenv.load_dotenv()
-st.write(os.getenv("LANGSMITH_API_KEY"))
-
 # Header with gradient background
 st.markdown("""
     <div style='background: linear-gradient(45deg, #4a90e2, #357abd); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;'>
@@ -218,7 +218,7 @@ if st.session_state.needs_feedback:
         with st.spinner("Processing..."):
             final_state = st.session_state.workflow.invoke(
                 Command(resume=[{"args": feedback_input}]),
-                config={"configurable": {"thread_id": random_int}}
+                config={"configurable": {"thread_id": st.session_state.thread_id}}
             )
             st.session_state.needs_feedback = False
             st.session_state.feedback_key += 1
@@ -242,8 +242,8 @@ if not st.session_state.needs_feedback:
         import random
 
         # Generate a random integer between 0 and 100
-        random_int = random.randint(0, 1000)
-        print(random_int)  # Example output: 42
+        st.session_state.thread_id = random.randint(0, 1000)
+        print(st.session_state.thread_id)  # Example output: 42
 
         initial_state = {
             "curr_state": "",
@@ -260,7 +260,7 @@ if not st.session_state.needs_feedback:
         with st.spinner("Thinking..."):
             final_state = st.session_state.workflow.invoke(
                 initial_state,
-                config={"configurable": {"thread_id": random_int}}
+                config={"configurable": {"thread_id": st.session_state.thread_id}}
             )
             
             print("reasoning:")
@@ -296,30 +296,3 @@ with st.sidebar:
     # Add the workflow graph
 
     st.image(image_path)
-
-    st.markdown("""
-        <div style='background: linear-gradient(45deg, #4a90e2, #357abd); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;'>
-            <h2 style='color: white; margin: 0;'>About</h2>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("""
-        <div style='background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
-            <h3 style='color: #2c3e50; margin-top: 0;'>What I can help you with:</h3>
-            <ul style='color: #2c3e50;'>
-                <li>Finding specific cheese products</li>
-                <li>Price comparisons</li>
-                <li>Product recommendations</li>
-                <li>Brand information</li>
-                <li>Similar cheese suggestions</li>
-            </ul>
-            
-            <h3 style='color: #2c3e50;'>Try asking:</h3>
-            <ul style='color: #2c3e50;'>
-                <li>"Find mozzarella under $50"</li>
-                <li>"What cheese is similar to brie?"</li>
-                <li>"Show me the most expensive cheese"</li>
-                <li>"What cheese does Galbani make?"</li>
-            </ul>
-        </div>
-    """, unsafe_allow_html=True) 
