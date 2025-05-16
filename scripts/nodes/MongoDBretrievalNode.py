@@ -285,6 +285,7 @@ Your query:
     print("MongoDB query:")
     print(mongo_query)
     print("--------------------------------")
+    results = []
     # Execute the query
     if mongo_query.get("query_type") == "aggregate":
         pipeline = []
@@ -302,7 +303,6 @@ Your query:
 
         results = list(collection.aggregate(pipeline))
     else:
-
         cursor = collection.find(
             mongo_query.get("filter_conditions"),
             mongo_query.get("projection") or {
@@ -354,10 +354,13 @@ Your query:
         formatted_results.append(formatted_result)
     
     # Update the state with the results
-    print("Formatted results:")
-    print(len(formatted_results))
-    state["curr_state"] = "MongoDB_retrieval"
-    state["curr_context"] = str(formatted_results)
-    state["aggregated_context"] += "\n" + state["curr_context"]
-    
-    return state
+    # print("Formatted results:")
+    # print(len(formatted_results))
+    # print(formatted_results)
+    state["curr_context"]=[{"role": "system", "content": str(formatted_results)}]
+    if state["tool"] == "combined_search":
+        return {
+            "curr_context": state["curr_context"]
+        }
+    else:
+        return state

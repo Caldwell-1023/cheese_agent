@@ -14,6 +14,8 @@ def retrieve_or_answer(state: PlanExecute):
         return "chosen_tool_is_pinecone_retrieval"
     elif state["tool"] == "human_in_the_loop":
         return "chosen_tool_is_human_in_the_loop"
+    elif state["tool"] == "combined_search":
+        return "chosen_tool_is_combined_search"
     elif state["tool"] == "answer":
         return "chosen_tool_is_answer"
     else:

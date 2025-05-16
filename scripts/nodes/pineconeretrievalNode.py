@@ -48,7 +48,5 @@ def pineconeretrievalNode(state: PlanExecute):
         formatted_info.append(info)
 
     context = "\n".join(formatted_info)
-    state["curr_context"] = context
-    state["aggregated_context"] += "\n" + state["curr_context"]
-    state["curr_state"] = "pinecone_retrieval"
+    state["curr_context"] = [{"role": "system", "content": context}]
     return state

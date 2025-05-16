@@ -8,7 +8,6 @@ def human_in_the_loopNode(state: PlanExecute):
     """
 
     print("Human in the loop")
-    state["curr_state"] = "human_in_the_loop"
     response = interrupt({"query": state["query_to_retrieve_or_answer"]})
     # Command(resume=[{"args":"Help me."}])
     state["human_feedback"] = response[0]["args"]

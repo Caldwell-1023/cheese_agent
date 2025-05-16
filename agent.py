@@ -30,6 +30,7 @@ from scripts.nodes.pineconeretrievalNode import pineconeretrievalNode
 from scripts.nodes.answerNode import answerNode
 from scripts.retrieve_or_answer import retrieve_or_answer
 from scripts.retry_or_end import retry_or_end
+from scripts.nodes.combinedSearchNode import combinedSearchNode
 
 def make_agent_workflow():
     agent_workflow = StateGraph(PlanExecute)
@@ -38,6 +39,7 @@ def make_agent_workflow():
     agent_workflow.add_node("pinecone_retrieval", pineconeretrievalNode)
     agent_workflow.add_node("answer", answerNode)
     agent_workflow.add_node("human_in_the_loop", human_in_the_loopNode)
+    agent_workflow.add_node("combined_search", combinedSearchNode)
 
     agent_workflow.add_edge(START, "reasoning")
     agent_workflow.add_conditional_edges(
@@ -47,9 +49,11 @@ def make_agent_workflow():
             "chosen_tool_is_MongoDB_retrieval": "MongoDB_retrieval",
             "chosen_tool_is_pinecone_retrieval": "pinecone_retrieval",
             "chosen_tool_is_human_in_the_loop": "human_in_the_loop",
-            "chosen_tool_is_answer": "answer"
+            "chosen_tool_is_answer": "answer",
+            "chosen_tool_is_combined_search": "combined_search"
         },
     )
+
 
     # agent_workflow.add_edge("reasoning", "answer")
     agent_workflow.add_edge("human_in_the_loop", "reasoning" )
@@ -63,6 +67,8 @@ def make_agent_workflow():
             "end_workflow": END
         }
     )
+    agent_workflow.add_edge("combined_search", "MongoDB_retrieval")
+    agent_workflow.add_edge("combined_search", "pinecone_retrieval")
 
     checkpointer = MemorySaver()
 

@@ -32,20 +32,32 @@ Guidelines:
 8. if the number of products is bigger than 20, return the first 20 products.
 Your answer:"""
 
-    # Create the prompt
+    # Create the prompt\
+    current_context = ''
+    print("Current context:", state['curr_context'])
+    if len(state['curr_context'])==0:
+        current_context = ""
+    elif len(state['curr_context'])==1:
+        current_context = state['curr_context'][0].content
+    else:
+        current_context += state['curr_context'][0].content
+        current_context += state['curr_context'][1].content
+    
     answer_prompt = PromptTemplate(
         template=answer_prompt_template,
         input_variables=["context", "question"]
     )
 
+    print("Current context:", current_context)
+
     # Initialize the LLM
     llm = ChatOpenAI(temperature=0, model_name="gpt-4o-mini")
 
     # Generate the answer
-    print("Context:", state["curr_context"])
+    print("Context:", current_context)
     print("Question:", state["query_to_retrieve_or_answer"])
     prompt_value = answer_prompt.format(
-        context=state["curr_context"],
+        context=current_context,
         question=state["query_to_retrieve_or_answer"]
     )
     
@@ -53,8 +65,6 @@ Your answer:"""
     
     # Update the state with the answer
     state["message"].append(HumanMessage(content=response.content))
-    state["curr_state"] = "answer"
-
     client = OpenAI()
     evaluation_prompt_template = """
     You are an AI assistant evaluating the quality of an answer about cheese products.
@@ -91,5 +101,9 @@ Your answer:"""
     # Store the answer and quality assessment in state
     state["answer_quality"] = quality_assessment
     state["message"].append(response.content)
+    state["curr_context"] = []
+    print("--------------------------------")
+    print("Current context:", state["curr_context"])
+    print("--------------------------------")
 
     return state

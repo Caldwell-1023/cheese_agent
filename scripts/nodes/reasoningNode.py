@@ -11,10 +11,10 @@ def reasoningNode(state: PlanExecute):
     Returns:
        The updated state of the plan execution.
     """
-    state["curr_state"] = "task_handler"
     print("aggregated context:")
     print(state["aggregated_context"])
     print("--------------------------------")
+    state["curr_state"] = "reasoning"
     inputs = {
                 "message": state["message"],
                 "aggregated_context": state["aggregated_context"],
@@ -29,7 +29,6 @@ def reasoningNode(state: PlanExecute):
     state["reasoning_chain"].append(output.analysis)
     if output.tool == "mongoDB_retrieval":
         state["query_to_retrieve_or_answer"] = output.query
-        state["curr_context"] = output.curr_context
         state["tool"]="MongoDB_retrieval"
     
     elif output.tool == "pinecone_retrieval":
@@ -38,12 +37,14 @@ def reasoningNode(state: PlanExecute):
 
     elif output.tool == "human_in_the_loop":
         state["query_to_retrieve_or_answer"] = output.query
-        state["curr_context"] = output.curr_context
         state["tool"]="human_in_the_loop"
 
     elif output.tool == "out_of_scope":
         state["query_to_retrieve_or_answer"] = output.query
         state["tool"]="answer"
+    elif output.tool == "combined_search":
+        state["query_to_retrieve_or_answer"] = output.query
+        state["tool"]="combined_search"
     else:
         raise ValueError("Invalid tool was outputed. Must be either 'retrieve' or 'answer_from_context'")
     return state  
@@ -71,14 +72,26 @@ Available Tools:
      * Searching based on product descriptions or attributes
    - Example queries: "Find cheese that's good for pizza", "What cheese is similar to brie?", "Show me creamy Italian cheeses"
 
-3. Out-of-Scope Handler (Tool C)
+3. Combined Search (Tool E)
+   - Use this tool when the query requires:
+     * Both specific product information AND semantic understanding
+     * Price/attribute filtering AND similarity-based recommendations
+     * Complex queries that need both structured and unstructured data
+     * Comprehensive product analysis combining multiple aspects
+   - Example queries: 
+     * "Find Italian cheeses under $30 that are similar to mozzarella"
+     * "Show me creamy cheeses from France that cost less than $40"
+     * "What are the best-rated cheddar cheeses under $50 that are good for melting?"
+     * "Find organic cheeses similar to brie that are less than $35"
+
+4. Out-of-Scope Handler (Tool C)
    - Use this tool when:
      * The query is not related to cheese products or information
      * The query is about other food items or unrelated topics
      * The query is outside the system's domain of expertise
    - Example scenarios: "Tell me about wine", "What's the weather like?", "How to make pasta" or "Hello!"
 
-4. Human-in-the-Loop (Tool D)
+5. Human-in-the-Loop (Tool D)
    - Use this tool when:
      * The query lacks sufficient information to provide a meaningful response
      * The query is ambiguous or unclear
@@ -101,9 +114,10 @@ Your task:
    - Determine which tool is most appropriate
    - Consider both the original query and any clarifications from human feedback
 
-3. For Tools A or B:
+3. For Tools A, B, or E:
    - Generate a clear, specific query that will retrieve the most relevant information
-   - Specify which tool to use (MongoDB_retrieval or pinecone_retrieval)
+   - For Tool E, specify that both MongoDB_retrieval and pinecone_retrieval should be used
+   - Specify which tool(s) to use (MongoDB_retrieval, pinecone_retrieval, or both)
    - Incorporate any relevant information from human feedback into the query
 
 4. For Tool C:
@@ -122,6 +136,7 @@ Important Guidelines:
 - Always consider the user's intent and the type of information they're seeking
 - For price-related queries, prefer MongoDB search
 - For descriptive or similarity-based queries, prefer vector search
+- For complex queries requiring both structured and semantic search, use the Combined Search tool
 - When in doubt about query clarity or completeness, use the human-in-the-loop tool
 - Be specific about what additional information is needed from the user
 - Clearly identify and handle out-of-scope queries appropriately
@@ -135,7 +150,7 @@ Important Guidelines:
         query: str = Field(description="The specific query or question to be used")
         analysis: str = Field(description="Brief explanation of why this tool was chosen")
         curr_context: str = Field(description="The context to use")
-        tool: str = Field(description="The tool to be used should be either mongoDB_retrieval, pinecone_retrieval, human_in_the_loop or out_of_scope.")
+        tool: str = Field(description="The tool to be used should be either mongoDB_retrieval, pinecone_retrieval, human_in_the_loop, combined_search or out_of_scope.")
 
 
     reasoning_prompt = PromptTemplate(

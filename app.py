@@ -2,6 +2,8 @@ import streamlit as st
 from agent import make_agent_workflow
 from langgraph.types import Command
 import json
+import os
+import dotenv
 
 image_path = "img/workflow_graph.png"
 # Set page config
@@ -156,6 +158,8 @@ if "feedback_key" not in st.session_state:
 if "reasoning_chain" not in st.session_state:
     st.session_state.reasoning_chain = []
 
+dotenv.load_dotenv()
+st.write(os.getenv("LANGSMITH_API_KEY"))
 
 # Header with gradient background
 st.markdown("""
@@ -214,7 +218,7 @@ if st.session_state.needs_feedback:
         with st.spinner("Processing..."):
             final_state = st.session_state.workflow.invoke(
                 Command(resume=[{"args": feedback_input}]),
-                config={"configurable": {"thread_id": 40}}
+                config={"configurable": {"thread_id": random_int}}
             )
             st.session_state.needs_feedback = False
             st.session_state.feedback_key += 1
@@ -235,14 +239,19 @@ if not st.session_state.needs_feedback:
 
     if user_input:
         st.session_state.messages.append({"role": "user", "content": user_input})
-        
+        import random
+
+        # Generate a random integer between 0 and 100
+        random_int = random.randint(0, 1000)
+        print(random_int)  # Example output: 42
+
         initial_state = {
+            "curr_state": "",
             "message": [user_input],
             "aggregated_context": "",
-            "curr_context": "",
+            "curr_context": [],
             "query_to_retrieve_or_answer": "",
             "tool": "",
-            "curr_state": "",
             "human_feedback": "",
             "answer_quality": "",
             "reasoning_chain": []
@@ -251,10 +260,13 @@ if not st.session_state.needs_feedback:
         with st.spinner("Thinking..."):
             final_state = st.session_state.workflow.invoke(
                 initial_state,
-                config={"configurable": {"thread_id": 40}}
+                config={"configurable": {"thread_id": random_int}}
             )
+            
             print("reasoning:")
             print(final_state["reasoning_chain"])
+            print("--------------------------------")
+            print("final state:", final_state)
             print("--------------------------------")
 
             if "__interrupt__" in final_state:
