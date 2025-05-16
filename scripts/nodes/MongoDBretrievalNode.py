@@ -109,7 +109,7 @@ Example queries:
 {{
     "query_type": "find",  // Using find because we're filtering by specific criteria
     "filter_conditions": {{
-        "brand": {{"$regex": "Galbani", "$options": "i"}},
+        "brand": "Galbani",
         "department": {{"$regex": "Specialty Cheese", "$options": "i"}},
         "empty": true
     }},
