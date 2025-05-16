@@ -252,7 +252,7 @@ if not st.session_state.needs_feedback:
         print("--------------------------------")
         initial_state = {
             "curr_state": "",
-            "message": chat_history,
+            "message": [user_input],
             "aggregated_context": "",
             "curr_context": [],
             "query_to_retrieve_or_answer": "",
