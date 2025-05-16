@@ -244,10 +244,15 @@ if not st.session_state.needs_feedback:
         # Generate a random integer between 0 and 100
         st.session_state.thread_id = random.randint(0, 1000)
         print(st.session_state.thread_id)  # Example output: 42
-
+        chat_history = []
+        for i in st.session_state.messages[-4:]:
+            chat_history.append(i["role"] + ": " + i["content"])
+        print("chat history:")
+        print(chat_history)
+        print("--------------------------------")
         initial_state = {
             "curr_state": "",
-            "message": [user_input],
+            "message": chat_history,
             "aggregated_context": "",
             "curr_context": [],
             "query_to_retrieve_or_answer": "",
@@ -280,7 +285,6 @@ if not st.session_state.needs_feedback:
                     response = final_state["message"]
                 
                 st.session_state.messages.append({"role": "assistant", "content": response})
-            
             st.session_state.reasoning_chain = final_state["reasoning_chain"]
             st.session_state.input_key += 1
             st.rerun()

@@ -26,10 +26,35 @@ Guidelines:
 2. If the context doesn't contain enough information, say so
 3. Format prices and measurements appropriately
 4. Highlight key features and benefits of the products
-5. If multiple products are mentioned, compare them when relevant
-6. Be friendly and professional in your tone
-7. if the user ask for all products, first return the correct number of products and then return all the products.
-8. if the number of products is bigger than 30, return the first 30 products.
+5. Be friendly and professional in your tone
+6. When listing products:
+   - IMPORTANT: Use the EXACT total number of products mentioned in the context
+   - Start your response with "Found [exact number] products"
+   - If the context mentions a specific number, you MUST use that exact number
+   - If the number of products is 30 or less, you MUST list ALL products without exception
+   - If the number of products is more than 30, list only the first 30 products
+   - Always mention if you're showing a partial list
+7. Number handling:
+   - Never estimate or guess the total number
+   - If the context doesn't explicitly state a number, say "The total number of products is not specified"
+   - If you see a number in the context, use that exact number
+   - Do not modify or round the number in any way
+8. Product listing requirements:
+   - For 30 or fewer products:
+     * You MUST list EVERY product from the context
+     * Do not skip any products
+     * Format each product as a separate item
+     * Include all available details for each product
+   - For more than 30 products:
+     * List only the first 30 products
+     * Clearly state that you're showing a partial list
+     * Mention the total number of products found
+9. Formatting:
+   - List each product on a new line
+   - Use bullet points or numbers for each product
+   - Include all available details (price, brand, type, etc.)
+   - Maintain consistent formatting throughout the list
+
 Your answer:"""
 
     # Create the prompt\
