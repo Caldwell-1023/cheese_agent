@@ -28,8 +28,8 @@ Guidelines:
 4. Highlight key features and benefits of the products
 5. If multiple products are mentioned, compare them when relevant
 6. Be friendly and professional in your tone
-7. if the user ask for all products, first return the correct number of products and then return the products.
-8. if the number of products is bigger than 20, return the first 20 products.
+7. if the user ask for all products, first return the correct number of products and then return all the products.
+8. if the number of products is bigger than 30, return the first 30 products.
 Your answer:"""
 
     # Create the prompt\
