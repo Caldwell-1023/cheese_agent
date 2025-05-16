@@ -54,7 +54,7 @@ Available fields in the database:
 - item_counts_case: Number of items per case (integer)
 - weight_case: Weight of entire case (float)
 - price_case: Price of entire case (float)
-- image: Image URL (string)
+- showImage: Image URL (string)
 Available departments:
 - Specialty Cheese
 - Sliced Cheese
@@ -314,6 +314,7 @@ Your query:
                 "weight_each": 1,
                 "weight_unit": 1,
                 "text": 1,
+                "showImage": 1,
                 "_id": 0
             }
         )
